@@ -2,7 +2,7 @@
  * @Author: 18062706139 2279549769@qq.com
  * @Date: 2022-08-14 13:08:30
  * @LastEditors: 18062706139 2279549769@qq.com
- * @LastEditTime: 2022-08-14 15:12:01
+ * @LastEditTime: 2022-08-14 16:03:30
  * @FilePath: /api_server/router_handler/user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,11 +12,46 @@ const db = require('../db/index')
 // 导入 bcryptjs
 const bcrypt = require('bcryptjs')
 
+// 导入生成token的包
+const jsonWebToken = require('jsonwebtoken')
+
+// 导入全局的配置文件
+const config = require('../config')
+
 // 注册新用户的处理函数
 exports.login = (req, res) => {
-    // 获取客户端提交到服务器的信息
-    res.send('regUser ok')
+    // 接受表单的数据
+    const userInfo = req.body
+    // 定义 SQL 语句
+    // 执行 SQL 语句，根据用户名查询用户信息
+    const sql = `select * from ev_users where username=?`
+    db.query(sql, [userInfo.username], (err, result) => {
+        if(err) return res.cc(err)
+        if(result.length !== 1) {
+            return res.cc('登录失败')
+        }
+        // 比对密码 对不对
+        // 里面不能明文存储
+        const compareResult = bcrypt.compareSync(userInfo.password, result[0].password)
+        if(!compareResult) return res.cc('登录失败！')
+        // TODO 在服务器端生成 Token 字符串
+        // 生成 token es6 高级语法
+        const user = {...result[0], password:'', user_pic:''}
+        // 对用户的信息进行加密
+        const tokenStr = jsonWebToken.sign(user, config.jwtSecretKey, {expiresIn: config.expires})
+        // 将 token 响应给客户端
+        res.send({
+            status: 0,
+            message: '登录成功',
+            token: 'Bearer ' +  tokenStr
+        })
+        
+    })
 }
+
+
+
+
 // login的处理函数
 exports.regUser = (req, res) => {
     // 对表单中的数据进行合法性校验

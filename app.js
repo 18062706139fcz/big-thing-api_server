@@ -2,7 +2,7 @@
  * @Author: 18062706139 2279549769@qq.com
  * @Date: 2022-08-14 13:01:10
  * @LastEditors: 18062706139 2279549769@qq.com
- * @LastEditTime: 2022-08-14 15:19:19
+ * @LastEditTime: 2022-08-14 16:07:40
  * @FilePath: /api_server/app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -31,11 +31,19 @@ app.use((req, res, next) => {
     next()
 })
 
+// 在路由之前配置解析 Token 的中间件
+const expressJWT = require('express-jwt')
+const config = require('./config')
+
+app.use(expressJWT({secret: config.jwtSecretKey}).unless({path: [/^\/api\//]}))
+
 app.use('/api', userRouter)
 
 app.use((err, req, res, next) => {
     // 验证失败导致的错误
     if(err instanceof Joi.ValidationError) return res.cc(err)
+    // 身份认证失败后的错误
+    if(err.name === 'UnauthorizedError') return res.cc('身份认证失败')
     // 未知错误
     res.cc(err)
 })
