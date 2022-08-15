@@ -2,7 +2,7 @@
  * @Author: 18062706139 2279549769@qq.com
  * @Date: 2022-08-15 09:04:02
  * @LastEditors: 18062706139 2279549769@qq.com
- * @LastEditTime: 2022-08-15 10:34:49
+ * @LastEditTime: 2022-08-15 10:37:31
  * @FilePath: /api_server/router_handler/userinfo.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -66,6 +66,6 @@ exports.updateAvatar = (req, res) => {
     db.query(sql, [req.body.avatar, req.user.id], (err, result) => {
         if(err) return res.cc(err)
         if(result.affectedRows !== 1) return res.cc('更新头像信息失败')
-        return res.cc('更新成功', 0)
+        res.cc('更新成功', 0)
     })
 }
