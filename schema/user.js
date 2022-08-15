@@ -2,7 +2,7 @@
  * @Author: 18062706139 2279549769@qq.com
  * @Date: 2022-08-14 15:01:37
  * @LastEditors: 18062706139 2279549769@qq.com
- * @LastEditTime: 2022-08-15 10:30:09
+ * @LastEditTime: 2022-08-15 11:11:28
  * @FilePath: /api_server/schema/user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -53,3 +53,4 @@ exports.update_avatar_schema = {
         avatar,
     }
 }
+
