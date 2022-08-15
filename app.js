@@ -2,7 +2,7 @@
  * @Author: 18062706139 2279549769@qq.com
  * @Date: 2022-08-14 13:01:10
  * @LastEditors: 18062706139 2279549769@qq.com
- * @LastEditTime: 2022-08-14 16:07:40
+ * @LastEditTime: 2022-08-15 08:56:32
  * @FilePath: /api_server/app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -38,6 +38,10 @@ const config = require('./config')
 app.use(expressJWT({secret: config.jwtSecretKey}).unless({path: [/^\/api\//]}))
 
 app.use('/api', userRouter)
+
+const userinfoRouter = require('./router/userinfo')
+
+app.use('/my', userinfoRouter)
 
 app.use((err, req, res, next) => {
     // 验证失败导致的错误
